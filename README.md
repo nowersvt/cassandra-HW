@@ -16,11 +16,14 @@ git clone https://github.com/nowersvt/cassandra-HW.git
 cd cassandra-HW/
 make deploy-cassandra
 ```
+Check the working database: `make testConnect-to-db `
 
-if you want connect to pod use this `make connect-app-client` you can also connect to the database console`make connect-cassandra-db `
+Connect to the application client pod: `make connect-app-client`
 
-check work nodes `kubectl get nodes`
+Connect to the Cassandra database console: `make connect-cassandra-db `
 
-check running all pods `kubectl get po -A `
+Verify the status of Kubernetes nodes: `kubectl get nodes`
 
-check describe pods `kubectl describe pods `
+List all running pods : `kubectl get po -A `
+
+Describe all pods in detail: `kubectl describe pods `
