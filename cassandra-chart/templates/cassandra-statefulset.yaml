@@ -15,28 +15,55 @@ spec:
     spec:
       containers:
       - name: cassandra
-        image: {{ .Values.cassandra.image }}
+        image: "{{ .Values.cassandra.image }}"
         env:
         - name: CASSANDRA_CLUSTER_NAME
           value: "{{ .Values.cassandra.clusterName }}"
+        - name: CASSANDRA_SEEDS
+          value: cassandra-0.cassandra.default.svc.cluster.local
         ports:
         - containerPort: 9042
+        volumeMounts:
+        - name: cassandra-config
+          mountPath: /etc/cassandra-config
+          readOnly: true
+        - name: cassandra-data
+          mountPath: /var/lib/cassandra
         resources:
           limits:
             memory: "{{ .Values.cassandra.memoryLimit }}"
             cpu: "{{ .Values.cassandra.cpuLimit }}"
-
----
-
-apiVersion: v1
-kind: Service
-metadata:
-  name: cassandra
-spec:
-  selector:
-    app: cassandra
-  ports:
-  - protocol: TCP
-    port: 9042
-    targetPort: 9042
-  clusterIP: None
+        livenessProbe:          # Check if Cassandra is responsive by executing CQL query
+          exec:
+            command:
+            - cqlsh
+            - -e
+            - "DESCRIBE KEYSPACES;"
+          initialDelaySeconds: 60
+          timeoutSeconds: 10
+          periodSeconds: 10
+          successThreshold: 1
+          failureThreshold: 3
+        readinessProbe:           # Check if Cassandra is ready to serve traffic
+          exec:
+            command:
+            - cqlsh
+            - -e
+            - "SELECT * FROM system_schema.keyspaces;"
+          initialDelaySeconds: 30
+          timeoutSeconds: 10
+          periodSeconds: 10
+          successThreshold: 1
+          failureThreshold: 3
+      volumes:
+      - name: cassandra-config
+        configMap:
+          name: cassandra-config
+  volumeClaimTemplates:
+  - metadata:
+      name: cassandra-data
+    spec:
+      accessModes: ["ReadWriteOnce"]
+      resources:
+        requests:
+          storage: "{{ .Values.cassandra.storageCapacity }}"
