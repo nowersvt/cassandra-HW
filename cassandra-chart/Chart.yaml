@@ -13,6 +13,6 @@ keywords:
   - cassandra
   - database
   - kubernetes
-
+  - Helm
 sources:
-  - https://github.com/nowersvt/dassdgerhg
+  - https://github.com/nowersvt/cassandra-HW

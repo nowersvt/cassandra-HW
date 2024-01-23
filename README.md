@@ -1,13 +1,24 @@
-# Cassandra HW
+# Cassandra-HW
 
-## Requirements
-1. Docker
-2. Kubectl
-3. Helm
+> *Dependency*
 
-## How to Run
+* Docker
+* Kubernetes
+* Helm
+* Make
 
-Navigate to the `cassandra-HW` directory and run the following command:
+---
 
-```bash
+> How To Deploy & Check
+
+```apache
+git clone https://github.com/nowersvt/cassandra-HW.git
+cd cassandra-HW/
 make deploy-cassandra
+```
+
+check work nodes `kubectl get nodes`
+
+check running all pods `kubectl get po -A `
+
+check describe pods `kubectl describe pods `
