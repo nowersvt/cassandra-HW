@@ -17,6 +17,8 @@ cd cassandra-HW/
 make deploy-cassandra
 ```
 
+if you want connect to pod use this `make connect-app-client` you can also connect to the database console`make connect-cassandra-db `
+
 check work nodes `kubectl get nodes`
 
 check running all pods `kubectl get po -A `
